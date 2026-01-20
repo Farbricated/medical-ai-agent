@@ -10,3 +10,6 @@ python-dotenv>=1.0.0
 groq>=0.11.0
 plotly>=5.0.0
 pandas>=2.0.0
+sentence-transformers>=2.2.0
+rank-bm25>=0.2.2
+biopython>=1.81
