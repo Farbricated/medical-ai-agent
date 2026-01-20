@@ -43,17 +43,17 @@ class MedicalVectorStore:
         print(f"✓ Added {len(points)} documents!")
     
     def search(self, query_vector: List[float], limit: int = 5):
-        """Search similar documents"""
-        results = self.client.search(
+        """Search similar documents - FIXED METHOD"""
+        results = self.client.query_points(
             collection_name=self.collection_name,
-            query_vector=query_vector,
+            query=query_vector,
             limit=limit
         )
-        return results
+        return results.points
 
 if __name__ == "__main__":
     from dotenv import load_dotenv
     load_dotenv()
     
     store = MedicalVectorStore()
-    store.create_collection(vector_size=768)
+    store.create_collection(vector_size=384)
