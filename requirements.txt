@@ -2,10 +2,12 @@ fastapi==0.109.0
 uvicorn[standard]==0.27.0
 streamlit==1.31.0
 langchain==0.1.20
-langchain-groq==0.1.5
+langchain-groq==0.1.9
 langchain-core==0.1.52
 langchain-community==0.0.38
-langgraph==0.0.62
+langchain-text-splitters==0.0.2
+langgraph==0.0.69
 qdrant-client==1.7.3
 python-dotenv==1.0.0
 groq==0.4.2
+pydantic==2.6.0
