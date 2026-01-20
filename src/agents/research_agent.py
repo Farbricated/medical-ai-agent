@@ -1,5 +1,5 @@
 from langchain_groq import ChatGroq
-from langchain_core.message import HumanMessage, SystemMessage
+from langchain_core.messages import HumanMessage, SystemMessage
 from typing import TypedDict, Annotated, Sequence, List, Dict
 from langgraph.graph import StateGraph, END
 import operator
