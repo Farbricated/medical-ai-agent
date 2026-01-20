@@ -1,0 +1,14 @@
+fastapi
+uvicorn[standard]
+streamlit
+langchain
+langchain-groq
+langgraph
+langchain-community
+qdrant-client
+sentence-transformers
+python-dotenv
+pydantic
+pandas
+plotly
+biopython

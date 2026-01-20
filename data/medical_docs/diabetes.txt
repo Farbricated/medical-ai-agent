@@ -1,0 +1,8 @@
+
+    Diabetes mellitus is a metabolic disorder characterized by high blood sugar.
+    Type 1 diabetes results from autoimmune destruction of pancreatic beta cells.
+    Type 2 diabetes involves insulin resistance and relative insulin deficiency.
+    Common symptoms include polyuria, polydipsia, and unexplained weight loss.
+    Diagnosis requires fasting glucose >126 mg/dL or HbA1c >6.5%.
+    Treatment includes lifestyle modification, oral medications, and insulin therapy.
+    
