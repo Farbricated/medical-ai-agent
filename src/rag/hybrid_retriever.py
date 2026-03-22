@@ -8,6 +8,28 @@ from .embeddings import MedicalEmbeddings
 from .document_processor import DocumentProcessor
 
 
+def _find_docs_dir() -> Path | None:
+    """
+    Locate the medical docs directory by checking several candidate paths.
+    Supports both the repo layout (data/medical_docs/) and the case where
+    .txt files sit directly in the project root (common in Codespaces).
+    """
+    base = Path(__file__).resolve().parents[2]  # project root
+
+    candidates = [
+        base / "data" / "medical_docs",
+        base / "data",
+        base,                          # root-level .txt files (fallback)
+    ]
+
+    for path in candidates:
+        if path.is_dir() and list(path.glob("*.txt")):
+            print(f"  Found medical docs at: {path}")
+            return path
+
+    return None
+
+
 class HybridRetriever:
     def __init__(self):
         self.bm25 = BM25Retriever()
@@ -17,27 +39,23 @@ class HybridRetriever:
 
     def _load_and_index(self):
         """Load documents from disk, index in BM25, and upsert to Qdrant if empty."""
-        docs_dir = os.path.join(
-            os.path.dirname(os.path.dirname(os.path.dirname(__file__))),
-            "data",
-            "medical_docs",
-        )
+        docs_dir = _find_docs_dir()
 
-        if not Path(docs_dir).exists():
-            print(f"  WARNING: docs dir not found at {docs_dir}")
+        if docs_dir is None:
+            print("  WARNING: No medical docs directory found — retriever will be empty.")
             return
 
         processor = DocumentProcessor()
-        docs = processor.load_all_documents(docs_dir)
+        docs = processor.load_all_documents(str(docs_dir))
 
         if not docs:
             print("  WARNING: No documents found to index.")
             return
 
-        # Always build BM25 in memory (no persistence needed)
+        # Always rebuild BM25 (in-memory, fast)
         self.bm25.index_documents(docs)
 
-        # Upload when Qdrant is empty or has fewer vectors than local docs
+        # Upload to Qdrant only when the collection is empty or under-populated
         count = self.vector_store.collection_count()
         if count < len(docs):
             print(f"  Qdrant has {count} vectors, local has {len(docs)} docs — uploading...")
@@ -49,8 +67,8 @@ class HybridRetriever:
     def reciprocal_rank_fusion(
         self, bm25_results: List, vector_results: List, k: int = 60
     ) -> List[Dict]:
-        scores = {}
-        doc_map = {}
+        scores: Dict[str, float] = {}
+        doc_map: Dict[str, Any] = {}
 
         for rank, result in enumerate(bm25_results, 1):
             doc = result["document"]
