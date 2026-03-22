@@ -1,19 +1,19 @@
+import os
+import operator
+import sys
+from typing import TypedDict, Annotated, Sequence
+
 from langchain_groq import ChatGroq
 from langchain_core.messages import HumanMessage, SystemMessage
-from typing import TypedDict, Annotated, Sequence
 from langgraph.graph import StateGraph, END
-import operator
-import os
 from dotenv import load_dotenv
 
-# Import your RAG components
-import sys
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 from rag.hybrid_retriever import HybridRetriever
 
 load_dotenv()
 
-# State definition for LangGraph
+
 class AgentState(TypedDict):
     symptoms: str
     patient_history: str
@@ -21,54 +21,45 @@ class AgentState(TypedDict):
     diagnosis: str
     confidence: float
     recommendations: str
+    full_analysis: str
     messages: Annotated[Sequence[str], operator.add]
+
 
 class DiagnosisAgent:
     def __init__(self, retriever: HybridRetriever):
         self.retriever = retriever
-        
-        # Initialize Groq LLM with updated model
         self.llm = ChatGroq(
             api_key=os.getenv("GROQ_API_KEY"),
             model="llama-3.3-70b-versatile",
             temperature=0.1,
-            max_tokens=2000
+            max_tokens=2000,
         )
-        
-        # Build the graph
         self.graph = self._build_graph()
-    
+
     def _retrieve_knowledge(self, state: AgentState) -> AgentState:
-        """Retrieve relevant medical knowledge"""
         query = f"{state['symptoms']} {state.get('patient_history', '')}"
-        
-        # Use search method instead of retrieve
         results = self.retriever.search(query, top_k=5)
-        
-        state['retrieved_docs'] = results
-        state['messages'] = state.get('messages', []) + [
+        state["retrieved_docs"] = results
+        state["messages"] = list(state.get("messages", [])) + [
             f"Retrieved {len(results)} relevant documents"
         ]
         return state
-    
+
     def _analyze_symptoms(self, state: AgentState) -> AgentState:
-        """Analyze symptoms using LLM with retrieved knowledge"""
-        
-        # Prepare context from retrieved documents
-        # Handle different result formats
         context_parts = []
-        for i, doc in enumerate(state['retrieved_docs']):
+        for i, doc in enumerate(state["retrieved_docs"]):
             if isinstance(doc, dict):
-                # Check for different possible keys
-                content = doc.get('content') or doc.get('text') or doc.get('document', {}).get('text', '')
-                context_parts.append(f"Document {i+1}:\n{content[:500]}...")
+                content = (
+                    doc.get("content")
+                    or doc.get("text")
+                    or doc.get("document", {}).get("text", "")
+                )
+                context_parts.append(f"Document {i+1}:\n{content[:600]}")
             else:
-                context_parts.append(f"Document {i+1}:\n{str(doc)[:500]}...")
-        
-        context = "\n\n".join(context_parts)
-        
-        # Create prompt
-        prompt = f"""You are an expert medical AI assistant. Based on the provided medical knowledge and patient information, provide a detailed diagnostic analysis.
+                context_parts.append(f"Document {i+1}:\n{str(doc)[:600]}")
+        context = "\n\n".join(context_parts) if context_parts else "No context retrieved."
+
+        prompt = f"""You are an expert medical AI assistant. Analyze the symptoms and provide a diagnostic assessment.
 
 MEDICAL KNOWLEDGE:
 {context}
@@ -79,121 +70,85 @@ PATIENT SYMPTOMS:
 PATIENT HISTORY:
 {state.get('patient_history', 'No additional history provided')}
 
-Provide your analysis in the following format:
-1. PRIMARY DIAGNOSIS: [Most likely condition]
-2. CONFIDENCE LEVEL: [High/Medium/Low] - [percentage]
-3. SUPPORTING EVIDENCE: [Key symptoms/findings that support this diagnosis]
-4. DIFFERENTIAL DIAGNOSES: [Other possible conditions to consider]
-5. RECOMMENDED NEXT STEPS: [Tests, examinations, or immediate actions]
+Provide your analysis in this EXACT format:
+PRIMARY DIAGNOSIS: [Most likely condition]
+CONFIDENCE LEVEL: [High/Medium/Low] - [percentage e.g. 85%]
+SUPPORTING EVIDENCE: [Key symptoms/findings supporting this diagnosis]
+DIFFERENTIAL DIAGNOSES: [2-3 other possible conditions]
+RECOMMENDED NEXT STEPS: [Tests, examinations, or immediate actions]
 
-Be thorough but concise. Focus on evidence-based reasoning."""
+Be thorough but concise. This is for informational purposes only."""
 
-        # Get LLM response
-        messages = [
+        response = self.llm.invoke([
             SystemMessage(content="You are an expert medical diagnostic AI assistant."),
-            HumanMessage(content=prompt)
-        ]
-        
-        response = self.llm.invoke(messages)
+            HumanMessage(content=prompt),
+        ])
         analysis = response.content
-        
-        # Parse the response
-        state['diagnosis'] = self._extract_diagnosis(analysis)
-        state['confidence'] = self._extract_confidence(analysis)
-        state['recommendations'] = self._extract_recommendations(analysis)
-        state['messages'] = state.get('messages', []) + [
-            "Completed diagnostic analysis"
-        ]
-        
+
+        state["full_analysis"] = analysis
+        state["diagnosis"] = self._extract_section(analysis, "PRIMARY DIAGNOSIS:")
+        state["confidence"] = self._extract_confidence(analysis)
+        state["recommendations"] = self._extract_section(analysis, "RECOMMENDED NEXT STEPS:")
+        state["messages"] = list(state.get("messages", [])) + ["Completed diagnostic analysis"]
         return state
-    
-    def _extract_diagnosis(self, analysis: str) -> str:
-        """Extract primary diagnosis from analysis"""
+
+    def _extract_section(self, text: str, marker: str) -> str:
         try:
-            if "PRIMARY DIAGNOSIS:" in analysis or "PRIMARY DIAGNOSIS**:" in analysis:
-                # Handle both formats
-                marker = "PRIMARY DIAGNOSIS**:" if "PRIMARY DIAGNOSIS**:" in analysis else "PRIMARY DIAGNOSIS:"
-                diagnosis_section = analysis.split(marker)[1]
-                # Get first line and clean it
-                diagnosis = diagnosis_section.split("\n")[0].strip()
-                # Remove leading numbers, asterisks, etc.
-                diagnosis = diagnosis.lstrip("1234567890.*- ")
-                return diagnosis
-            return analysis[:200]
-        except:
-            return "Unable to extract diagnosis"
-    
-    def _extract_confidence(self, analysis: str) -> float:
-        """Extract confidence level"""
+            # Handle bold markdown variants like **PRIMARY DIAGNOSIS:**
+            for variant in [marker, marker.replace(":", "**:"), f"**{marker}"]:
+                if variant in text:
+                    section = text.split(variant)[1]
+                    line = section.split("\n")[0].strip().lstrip("1234567890.*- ")
+                    if line:
+                        return line
+        except Exception:
+            pass
+        return f"Unable to extract {marker}"
+
+    def _extract_confidence(self, text: str) -> float:
         try:
-            if "CONFIDENCE LEVEL:" in analysis or "CONFIDENCE LEVEL**:" in analysis:
-                marker = "CONFIDENCE LEVEL**:" if "CONFIDENCE LEVEL**:" in analysis else "CONFIDENCE LEVEL:"
-                conf_section = analysis.split(marker)[1]
-                conf_text = conf_section.split("\n")[0].lower()
-                
-                # Look for percentage
-                if "90" in conf_text or "95" in conf_text:
-                    return 0.90
-                elif "high" in conf_text or "80" in conf_text or "85" in conf_text:
+            marker = "CONFIDENCE LEVEL:"
+            if marker in text:
+                section = text.split(marker)[1].split("\n")[0].lower()
+                for pct in ["95", "90", "85", "80", "75", "70", "65", "60", "50"]:
+                    if pct in section:
+                        return float(pct) / 100
+                if "high" in section:
                     return 0.85
-                elif "medium" in conf_text or "70" in conf_text or "75" in conf_text:
+                if "medium" in section:
                     return 0.70
-                elif "low" in conf_text or "50" in conf_text or "60" in conf_text:
+                if "low" in section:
                     return 0.50
-            return 0.70
-        except:
-            return 0.50
-    
-    def _extract_recommendations(self, analysis: str) -> str:
-        """Extract recommendations"""
-        try:
-            if "RECOMMENDED NEXT STEPS:" in analysis or "RECOMMENDED NEXT STEPS**:" in analysis:
-                marker = "RECOMMENDED NEXT STEPS**:" if "RECOMMENDED NEXT STEPS**:" in analysis else "RECOMMENDED NEXT STEPS:"
-                rec_section = analysis.split(marker)[1]
-                # Get the section, clean up
-                rec_text = rec_section.strip()
-                # If there's another numbered section after, cut it off
-                if "\n\n" in rec_text:
-                    rec_text = rec_text.split("\n\n")[0]
-                return rec_text.lstrip("1234567890.*- ")
-            return "Consult with healthcare provider for further evaluation"
-        except:
-            return "Further medical evaluation recommended"
-    
+        except Exception:
+            pass
+        return 0.70
+
     def _build_graph(self):
-        """Build LangGraph workflow"""
         workflow = StateGraph(AgentState)
-        
-        # Add nodes
         workflow.add_node("retrieve", self._retrieve_knowledge)
         workflow.add_node("analyze", self._analyze_symptoms)
-        
-        # Define edges
         workflow.set_entry_point("retrieve")
         workflow.add_edge("retrieve", "analyze")
         workflow.add_edge("analyze", END)
-        
         return workflow.compile()
-    
+
     def diagnose(self, symptoms: str, patient_history: str = "") -> dict:
-        """Main diagnosis method"""
-        initial_state = {
+        initial_state: AgentState = {
             "symptoms": symptoms,
             "patient_history": patient_history,
             "retrieved_docs": [],
             "diagnosis": "",
             "confidence": 0.0,
             "recommendations": "",
-            "messages": []
+            "full_analysis": "",
+            "messages": [],
         }
-        
-        # Run the graph
         result = self.graph.invoke(initial_state)
-        
         return {
             "diagnosis": result["diagnosis"],
             "confidence": result["confidence"],
             "recommendations": result["recommendations"],
+            "full_analysis": result["full_analysis"],
             "retrieved_docs_count": len(result["retrieved_docs"]),
-            "process_log": result["messages"]
+            "process_log": list(result["messages"]),
         }

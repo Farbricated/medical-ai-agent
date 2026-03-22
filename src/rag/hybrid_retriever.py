@@ -1,75 +1,81 @@
+import os
+from pathlib import Path
 from typing import List, Dict, Any
+
 from .bm25_retriever import BM25Retriever
 from .vector_store import MedicalVectorStore
 from .embeddings import MedicalEmbeddings
+from .document_processor import DocumentProcessor
+
 
 class HybridRetriever:
     def __init__(self):
         self.bm25 = BM25Retriever()
         self.vector_store = MedicalVectorStore()
         self.embedder = MedicalEmbeddings()
-        
-    def index_documents(self, documents: List[Dict[str, Any]], vectors: List[List[float]]):
-        """Index docs in both BM25 and vector store"""
-        # BM25
-        self.bm25.index_documents(documents)
-        
-        # Vector store
-        self.vector_store.add_documents(documents, vectors)
-        
-        print(f"✓ Hybrid index ready with {len(documents)} docs")
-    
-    def reciprocal_rank_fusion(self, bm25_results: List, vector_results: List, k: int = 60) -> List[Dict]:
-        """Combine BM25 and vector results using RRF"""
+        self._load_and_index()
+
+    def _load_and_index(self):
+        """Load documents from disk, index in BM25, and upsert to Qdrant if empty."""
+        docs_dir = os.path.join(
+            os.path.dirname(os.path.dirname(os.path.dirname(__file__))),
+            "data",
+            "medical_docs",
+        )
+
+        if not Path(docs_dir).exists():
+            print(f"  WARNING: docs dir not found at {docs_dir}")
+            return
+
+        processor = DocumentProcessor()
+        docs = processor.load_all_documents(docs_dir)
+
+        if not docs:
+            print("  WARNING: No documents found to index.")
+            return
+
+        # Always build BM25 in memory (no persistence needed)
+        self.bm25.index_documents(docs)
+
+        # Only upload to Qdrant when collection is empty
+        count = self.vector_store.collection_count()
+        if count == 0:
+            print(f"  Qdrant is empty — uploading {len(docs)} document embeddings...")
+            vectors = self.embedder.embed_texts([d["text"] for d in docs])
+            self.vector_store.add_documents(docs, vectors)
+        else:
+            print(f"  Qdrant already has {count} vectors, skipping upload.")
+
+    def reciprocal_rank_fusion(
+        self, bm25_results: List, vector_results: List, k: int = 60
+    ) -> List[Dict]:
         scores = {}
-        
-        # BM25 scores
+        doc_map = {}
+
         for rank, result in enumerate(bm25_results, 1):
-            doc_id = result["document"].get("chunk_id", str(result["document"]))
+            doc = result["document"]
+            doc_id = f"{doc.get('source', '')}_{doc.get('chunk_id', rank)}"
             scores[doc_id] = scores.get(doc_id, 0) + 1 / (k + rank)
-        
-        # Vector scores
+            doc_map[doc_id] = doc
+
         for rank, result in enumerate(vector_results, 1):
-            doc_id = result.payload.get("chunk_id", str(result.id))
+            payload = result.payload
+            doc_id = f"{payload.get('source', '')}_{payload.get('chunk_id', rank)}"
             scores[doc_id] = scores.get(doc_id, 0) + 1 / (k + rank)
-        
-        # Sort by combined score
+            doc_map[doc_id] = payload
+
         sorted_docs = sorted(scores.items(), key=lambda x: x[1], reverse=True)
-        
-        # Get documents
-        all_docs = {
-            r["document"].get("chunk_id", str(r["document"])): r["document"] 
-            for r in bm25_results
-        }
-        all_docs.update({
-            r.payload.get("chunk_id", str(r.id)): r.payload 
-            for r in vector_results
-        })
-        
-        results = []
+
+        fused = []
         for doc_id, score in sorted_docs[:10]:
-            if doc_id in all_docs:
-                results.append({
-                    "document": all_docs[doc_id],
-                    "score": score,
-                    "rank": len(results) + 1
-                })
-        
-        return results
-    
+            fused.append(
+                {"document": doc_map[doc_id], "score": score, "rank": len(fused) + 1}
+            )
+        return fused
+
     def search(self, query: str, top_k: int = 5) -> List[Dict]:
-        """Hybrid search: BM25 + Vector with RRF"""
-        # BM25 search
         bm25_results = self.bm25.search(query, top_k=10)
-        
-        # Vector search
         query_vector = self.embedder.embed_query(query)
         vector_results = self.vector_store.search(query_vector, limit=10)
-        
-        # Fusion
-        hybrid_results = self.reciprocal_rank_fusion(bm25_results, vector_results)
-        
-        return hybrid_results[:top_k]
-
-if __name__ == "__main__":
-    print("Test in next step!")
+        fused = self.reciprocal_rank_fusion(bm25_results, vector_results)
+        return fused[:top_k]
