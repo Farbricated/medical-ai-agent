@@ -1,0 +1,30 @@
+Cardiovascular Disease - Cardiology Reference
+
+Acute Myocardial Infarction (Heart Attack):
+AMI occurs when blood flow to a part of the heart is blocked, causing myocardial necrosis. Classified as STEMI (ST-elevation MI) or NSTEMI.
+
+Symptoms: Chest pain or pressure radiating to left arm, jaw, or back. Diaphoresis, nausea, dyspnea, and lightheadedness. Women may present atypically with fatigue and epigastric pain.
+
+Diagnosis: ECG changes (ST elevation in STEMI), elevated troponin I and T, CK-MB. Echocardiography to assess wall motion abnormalities.
+
+Treatment: Immediate reperfusion therapy (PCI preferred within 90 minutes for STEMI). Antiplatelet therapy: aspirin + P2Y12 inhibitor (clopidogrel, ticagrelor). Anticoagulation, beta-blockers, ACE inhibitors, statins.
+
+Hypertension:
+Blood pressure >= 140/90 mmHg is hypertension. >= 180/120 is hypertensive crisis.
+Primary (essential) hypertension accounts for 95% of cases.
+First-line medications: ACE inhibitors, ARBs, calcium channel blockers, thiazide diuretics.
+Target BP < 130/80 mmHg for most patients.
+
+Heart Failure:
+HFrEF (reduced ejection fraction, EF < 40%) vs HFpEF (preserved EF >= 50%).
+Symptoms: dyspnea on exertion, orthopnea, paroxysmal nocturnal dyspnea, peripheral edema.
+Treatment for HFrEF: ACE inhibitors/ARBs/ARNIs, beta-blockers, mineralocorticoid antagonists, SGLT2 inhibitors, diuretics.
+
+Atrial Fibrillation:
+Most common sustained cardiac arrhythmia. Risk of stroke requires anticoagulation (CHA2DS2-VASc score).
+Rate control: beta-blockers, calcium channel blockers, digoxin.
+Rhythm control: antiarrhythmics (amiodarone, flecainide), cardioversion, ablation.
+
+Chest Pain Evaluation:
+Differential includes ACS, aortic dissection, pulmonary embolism, pericarditis, costochondritis, GERD.
+Always rule out life-threatening causes first with ECG, troponin, chest X-ray.

@@ -37,10 +37,10 @@ class HybridRetriever:
         # Always build BM25 in memory (no persistence needed)
         self.bm25.index_documents(docs)
 
-        # Only upload to Qdrant when collection is empty
+        # Upload when Qdrant is empty or has fewer vectors than local docs
         count = self.vector_store.collection_count()
-        if count == 0:
-            print(f"  Qdrant is empty — uploading {len(docs)} document embeddings...")
+        if count < len(docs):
+            print(f"  Qdrant has {count} vectors, local has {len(docs)} docs — uploading...")
             vectors = self.embedder.embed_texts([d["text"] for d in docs])
             self.vector_store.add_documents(docs, vectors)
         else:

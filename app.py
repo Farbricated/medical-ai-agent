@@ -83,11 +83,14 @@ h2, h3 { color: #283593 !important; font-weight: 600; }
 """, unsafe_allow_html=True)
 
 # ── Session state initialisation ──────────────────────────────────────────────
+@st.cache_resource(show_spinner="🔄 Loading medical knowledge base...")
+def load_orchestrator():
+    from agents.orchestrator import MedicalAgentOrchestrator
+    return MedicalAgentOrchestrator()
+
 if "orchestrator" not in st.session_state:
     try:
-        from agents.orchestrator import MedicalAgentOrchestrator
-        with st.spinner("🚀 Initialising MedAI system..."):
-            st.session_state.orchestrator = MedicalAgentOrchestrator()
+        st.session_state.orchestrator = load_orchestrator()
         st.session_state.initialized = True
         st.session_state.init_error = None
     except Exception as e:
@@ -115,6 +118,7 @@ with st.sidebar:
         "Navigation",
         ["💬 Chat Assistant", "📊 Analytics", "⚙️ System Status", "📚 About"],
         label_visibility="collapsed",
+        key="nav_radio",
     )
 
     st.markdown("---")
@@ -127,7 +131,7 @@ with st.sidebar:
         avg = sum(recent) / max(len(recent), 1)
         st.metric("Avg Time", f"{avg:.2f}s")
 
-    if st.button("🗑️ Clear Chat History", use_container_width=True):
+    if st.button("🗑️ Clear Chat History", width="stretch"):
         st.session_state.chat_history = []
         st.rerun()
 
@@ -174,7 +178,7 @@ if page == "💬 Chat Assistant":
             st.info("💡 Set GROQ_API_KEY in your .env file or Streamlit secrets.")
         elif "QDRANT" in err.upper():
             st.info("💡 Set QDRANT_URL and QDRANT_API_KEY in your .env file or Streamlit secrets.")
-        if st.button("🔄 Retry"):
+        if st.button("🔄 Retry", width="stretch"):
             del st.session_state["orchestrator"]
             del st.session_state["initialized"]
             st.rerun()
@@ -199,7 +203,7 @@ if page == "💬 Chat Assistant":
             label_visibility="collapsed",
         )
     with col2:
-        send_button = st.button("Send 📤", use_container_width=True)
+        send_button = st.button("Send 📤", width="stretch")
 
     if send_button and user_input:
         # Rate limit check
@@ -295,7 +299,7 @@ elif page == "📊 Analytics":
             )
             fig.update_layout(paper_bgcolor="#ffffff", plot_bgcolor="#ffffff",
                               font=dict(color="#212121", size=12))
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width="stretch")
 
         with col2:
             st.markdown("### ⚡ Response Time Trend")
@@ -311,7 +315,7 @@ elif page == "📊 Analytics":
                                    xaxis=dict(showgrid=True, gridcolor="#E0E0E0"),
                                    yaxis=dict(showgrid=True, gridcolor="#E0E0E0"),
                                    font=dict(color="#212121"))
-                st.plotly_chart(fig2, use_container_width=True)
+                st.plotly_chart(fig2, width="stretch")
 
         st.markdown("### 📝 Recent Queries")
         recent_chats = [
@@ -321,7 +325,7 @@ elif page == "📊 Analytics":
             if msg["role"] == "user"
         ]
         if recent_chats:
-            st.dataframe(pd.DataFrame(recent_chats), use_container_width=True, hide_index=True)
+            st.dataframe(pd.DataFrame(recent_chats), width="stretch", hide_index=True)
     else:
         st.info("📊 No analytics data yet. Start chatting to see insights!")
 
@@ -389,7 +393,7 @@ elif page == "⚙️ System Status":
         {"Agent": "Research Agent",  "Status": "🟢 Active", "Accuracy": "85.3%",
          "Description": "PubMed literature search & synthesis"},
     ]
-    st.dataframe(pd.DataFrame(agents_info), use_container_width=True, hide_index=True)
+    st.dataframe(pd.DataFrame(agents_info), width="stretch", hide_index=True)
 
     st.markdown("---")
     st.markdown("### ⚙️ Configuration")

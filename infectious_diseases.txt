@@ -1,0 +1,34 @@
+Infectious Diseases Reference
+
+Sepsis:
+Life-threatening organ dysfunction caused by dysregulated host response to infection.
+Septic shock: sepsis + vasopressor requirement + lactate > 2 mmol/L.
+qSOFA criteria: altered mental status, RR >= 22, SBP <= 100.
+Sepsis bundle (Hour-1): blood cultures x2, broad-spectrum antibiotics, 30mL/kg IV crystalloid for hypotension/lactate >= 4, vasopressors if needed, lactate measurement.
+Common sources: pneumonia, UTI, abdominal, catheter-related.
+Common organisms: Gram-negative (E.coli, Klebsiella, Pseudomonas), Gram-positive (Staph aureus, Streptococcus), Candida.
+
+COVID-19:
+Caused by SARS-CoV-2. Symptoms: fever, cough, fatigue, myalgia, loss of taste/smell (anosmia/ageusia).
+Severe: dyspnea, hypoxia (SpO2 < 94%), bilateral pneumonia.
+Treatment: Supportive, oxygen, dexamethasone for severe disease requiring oxygen, antivirals (nirmatrelvir/ritonavir for high-risk outpatients), anticoagulation for hospitalized patients.
+
+Urinary Tract Infections:
+Uncomplicated UTI (cystitis): dysuria, frequency, urgency. Treat with trimethoprim, nitrofurantoin, or fosfomycin.
+Pyelonephritis: flank pain, fever, rigors. Treat with ciprofloxacin or co-amoxiclav for 7-14 days.
+Urosepsis: requires IV antibiotics and hospitalization.
+
+HIV/AIDS:
+HIV destroys CD4+ T cells. AIDS defined as CD4 < 200/mm3 or AIDS-defining illness.
+Diagnosis: HIV antibody/antigen test (4th generation), confirmed by Western blot or viral load.
+Treatment: Antiretroviral therapy (ART) - INSTI-based regimens preferred. Goal: undetectable viral load.
+Opportunistic infections: PCP (CD4 < 200), toxoplasmosis (CD4 < 100), CMV retinitis (CD4 < 50), MAC (CD4 < 50).
+PrEP (tenofovir/emtricitabine) for HIV prevention.
+
+Tuberculosis:
+Caused by Mycobacterium tuberculosis. Spread by respiratory droplets.
+Primary TB often asymptomatic. Latent TB: positive TST/IGRA, no active disease.
+Active TB: cough > 3 weeks, hemoptysis, night sweats, weight loss, fever.
+Diagnosis: Sputum AFB smear and culture, chest X-ray, GeneXpert MTB/RIF.
+Treatment: RIPE (Rifampicin, Isoniazid, Pyrazinamide, Ethambutol) for 2 months, then RI for 4 months.
+Latent TB: isoniazid 6-9 months, or rifampicin 4 months.

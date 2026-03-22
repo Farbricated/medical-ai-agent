@@ -1,0 +1,36 @@
+Neurology Reference
+
+Stroke:
+Ischemic stroke (85%): blockage of cerebral artery by thrombus or embolus.
+Hemorrhagic stroke (15%): bleeding into brain parenchyma or subarachnoid space.
+
+FAST acronym: Face drooping, Arm weakness, Speech difficulty, Time to call emergency.
+Other symptoms: sudden severe headache, visual disturbance, confusion, loss of balance.
+
+Diagnosis: Non-contrast CT to rule out hemorrhage. MRI DWI for ischemic stroke.
+Treatment: IV alteplase (tPA) within 4.5 hours for ischemic stroke if no contraindications. Mechanical thrombectomy for large vessel occlusion within 24 hours. Aspirin + clopidogrel for minor stroke/TIA.
+
+Secondary prevention: antiplatelet therapy, anticoagulation for AF, statins, BP control, lifestyle modification.
+
+Epilepsy and Seizures:
+Seizure types: focal (aware vs impaired awareness), generalized (tonic-clonic, absence, myoclonic).
+Status epilepticus: seizure > 5 minutes, requires IV benzodiazepines (lorazepam, diazepam).
+First-line AEDs: valproate, lamotrigine, levetiracetam, carbamazepine (focal).
+Triggers: sleep deprivation, alcohol, missed medications, fever, metabolic disturbance.
+
+Headache:
+Migraine: unilateral, pulsating, moderate-severe, 4-72 hours. Nausea, photophobia, phonophobia. May have aura. Treat with triptans, NSAIDs. Prevent with propranolol, amitriptyline, topiramate.
+Tension headache: bilateral, band-like pressure, mild-moderate. Treat with paracetamol/NSAIDs.
+Cluster headache: severe unilateral periorbital pain, autonomic features. Treat with oxygen, sumatriptan.
+Red flags (SNOOP4): Systemic symptoms, Neurological signs, Onset sudden, Older age, Positional, Papilledema, Progressive.
+
+Parkinson's Disease:
+Progressive neurodegenerative disorder due to dopaminergic neuron loss in substantia nigra.
+Cardinal features: resting tremor, rigidity, bradykinesia, postural instability.
+Treatment: Levodopa/carbidopa is gold standard. Dopamine agonists, MAO-B inhibitors for early disease. Deep brain stimulation for advanced disease.
+
+Dementia:
+Alzheimer's disease (most common): progressive memory loss, language problems, behavioral changes.
+Vascular dementia: stepwise progression, cardiovascular risk factors.
+Lewy body dementia: parkinsonism, visual hallucinations, fluctuating cognition.
+Treatment: Cholinesterase inhibitors (donepezil, rivastigmine) for Alzheimer's. Memantine for moderate-severe.

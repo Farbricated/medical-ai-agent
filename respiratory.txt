@@ -1,0 +1,32 @@
+Respiratory Medicine Reference
+
+Asthma:
+Chronic inflammatory airway disease characterized by reversible airflow obstruction, airway hyperresponsiveness, and inflammation.
+Symptoms: wheezing, shortness of breath, chest tightness, cough (especially nocturnal).
+Triggers: allergens, exercise, cold air, smoke, infections, NSAIDs.
+Diagnosis: spirometry showing FEV1/FVC < 0.70, reversibility with bronchodilator (>12% and >200mL improvement).
+Treatment: SABA (salbutamol) for rescue. Inhaled corticosteroids (ICS) for persistent asthma. Add LABA, LAMA, or biologics for severe disease. Follow stepwise approach.
+
+COPD (Chronic Obstructive Pulmonary Disease):
+Progressive airflow limitation due to chronic inflammation from noxious particles (mainly smoking).
+Includes emphysema and chronic bronchitis.
+Symptoms: chronic productive cough, dyspnea on exertion, wheeze.
+Diagnosis: post-bronchodilator FEV1/FVC < 0.70. GOLD staging by FEV1 % predicted.
+Treatment: smoking cessation is most important. SABA/SAMA for symptoms. LABA/LAMA for persistent symptoms. ICS added for frequent exacerbations. Pulmonary rehabilitation. Oxygen for severe hypoxemia.
+
+Pneumonia:
+Community-acquired pneumonia (CAP) most commonly caused by Streptococcus pneumoniae, Haemophilus influenzae, atypical organisms.
+Symptoms: fever, productive cough, pleuritic chest pain, dyspnea.
+Diagnosis: chest X-ray showing consolidation, elevated WBC, elevated CRP.
+Treatment: amoxicillin for mild CAP, add macrolide or use respiratory fluoroquinolone for moderate/severe. Hospitalize if CURB-65 >= 2.
+
+Pulmonary Embolism:
+Blockage of pulmonary artery by thrombus, fat, or air. Life-threatening emergency.
+Symptoms: sudden dyspnea, pleuritic chest pain, hemoptysis, tachycardia, hypoxia.
+Diagnosis: CT pulmonary angiography (CTPA) is gold standard. D-dimer to rule out in low probability. Wells score for pre-test probability.
+Treatment: anticoagulation (LMWH, DOAC). Thrombolysis or embolectomy for massive PE with hemodynamic instability.
+
+Shortness of Breath Differential:
+Cardiac: heart failure, ACS, arrhythmia, pericardial effusion.
+Pulmonary: asthma, COPD, pneumonia, PE, pneumothorax, pleural effusion.
+Other: anemia, metabolic acidosis, anxiety/panic attacks.

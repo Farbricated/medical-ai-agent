@@ -1,0 +1,43 @@
+Pharmacology Reference - Common Drug Classes
+
+Statins (HMG-CoA Reductase Inhibitors):
+Drugs: atorvastatin, rosuvastatin, simvastatin, pravastatin.
+Mechanism: Inhibit HMG-CoA reductase, reducing cholesterol synthesis in liver.
+Indications: Hypercholesterolemia, cardiovascular disease prevention.
+Side effects: Myopathy (muscle pain/weakness), rhabdomyolysis (rare), elevated liver enzymes.
+Monitoring: LFTs at baseline, CK if myopathy suspected.
+
+ACE Inhibitors:
+Drugs: lisinopril, enalapril, ramipril, perindopril.
+Mechanism: Block conversion of angiotensin I to angiotensin II.
+Indications: Hypertension, heart failure, post-MI, diabetic nephropathy.
+Side effects: Dry cough (10-15%), angioedema (rare), hyperkalemia, acute kidney injury.
+Contraindications: Pregnancy, bilateral renal artery stenosis.
+
+Beta-Blockers:
+Drugs: metoprolol, bisoprolol, carvedilol, atenolol, propranolol.
+Mechanism: Block beta-adrenergic receptors.
+Indications: Hypertension, angina, heart failure (HFrEF), post-MI, arrhythmias.
+Side effects: Bradycardia, fatigue, bronchospasm (non-selective), sexual dysfunction.
+Contraindications: Severe bradycardia, high-degree AV block, decompensated heart failure, severe asthma.
+
+GLP-1 Receptor Agonists:
+Drugs: semaglutide, liraglutide, dulaglutide, exenatide.
+Mechanism: Mimic glucagon-like peptide-1, enhance glucose-dependent insulin secretion.
+Indications: Type 2 diabetes, obesity (semaglutide/liraglutide).
+Benefits: Weight loss, cardiovascular outcome benefits (LEADER, SUSTAIN-6, PIONEER 6 trials).
+Side effects: Nausea, vomiting, diarrhea. Rare: pancreatitis, thyroid C-cell tumors.
+
+SGLT2 Inhibitors:
+Drugs: empagliflozin, dapagliflozin, canagliflozin.
+Mechanism: Inhibit sodium-glucose cotransporter 2 in kidney, reducing glucose reabsorption.
+Indications: Type 2 diabetes, heart failure, CKD.
+Benefits: Cardiovascular and renal protective effects.
+Side effects: Genital mycotic infections, DKA (rare), volume depletion.
+
+Antibiotics - Overview:
+Beta-lactams (penicillins, cephalosporins, carbapenems): Cell wall synthesis inhibitors.
+Macrolides (azithromycin, clarithromycin): Protein synthesis inhibitors, atypical coverage.
+Fluoroquinolones (ciprofloxacin, levofloxacin): DNA gyrase inhibitors, broad spectrum.
+Tetracyclines (doxycycline): Protein synthesis inhibitors, intracellular organisms.
+Always consider local resistance patterns and culture sensitivities.
